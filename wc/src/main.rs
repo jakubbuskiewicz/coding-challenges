@@ -14,6 +14,10 @@ fn main() {
         let number_of_words: usize =
             count_number_of_words_in_file(&path).expect("could not count words in file");
         return println!("{:?} {:?}", number_of_words, path);
+    } else if pattern == "m" {
+        let number_of_characters: usize =
+            count_number_of_characters_in_file(&path).expect("could not count characters in file");
+        return println!("{:?} {:?}", number_of_characters, path);
     } else {
         panic!("unknown pattern {:?}", pattern);
     }
@@ -61,4 +65,22 @@ fn count_number_of_words_in_file(path: &str) -> Result<usize, std::io::Error> {
     }
 
     Ok(number_of_words)
+}
+
+fn count_number_of_characters_in_file(path: &str) -> Result<usize, std::io::Error> {
+    use std::fs::File;
+    use std::io::{BufRead, BufReader};
+
+    let file: File = File::open(path)?;
+    let reader: BufReader<File> = BufReader::new(file);
+
+    let mut number_of_characters: usize = 0;
+    for line in reader.lines() {
+        let line = line?;
+        number_of_characters += line.char_indices().count();
+        number_of_characters += 1;
+    }
+
+    // number of characters will differ from wc command as Rust counts CRLF as LF
+    Ok(number_of_characters)
 }
