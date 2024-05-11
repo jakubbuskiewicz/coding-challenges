@@ -1,25 +1,25 @@
 fn main() {
-    let pattern: String = std::env::args().nth(1).expect("no pattern given");
+    let option: String = std::env::args().nth(1).expect("no option given");
     let path: String = std::env::args().nth(2).expect("no path given");
 
-    if pattern == "c" {
+    if option == "c" {
         let number_of_bytes: usize =
             count_number_of_bytes_in_file(&path).expect("could not count bytes in file");
         return println!("{:?} {:?}", number_of_bytes, path);
-    } else if pattern == "l" {
+    } else if option == "l" {
         let number_of_lines: usize =
             count_number_of_lines_in_file(&path).expect("could not count lines in file");
         return println!("{:?} {:?}", number_of_lines, path);
-    } else if pattern == "w" {
+    } else if option == "w" {
         let number_of_words: usize =
             count_number_of_words_in_file(&path).expect("could not count words in file");
         return println!("{:?} {:?}", number_of_words, path);
-    } else if pattern == "m" {
+    } else if option == "m" {
         let number_of_characters: usize =
             count_number_of_characters_in_file(&path).expect("could not count characters in file");
         return println!("{:?} {:?}", number_of_characters, path);
     } else {
-        panic!("unknown pattern {:?}", pattern);
+        panic!("unknown option {:?}", option);
     }
 }
 
@@ -78,9 +78,9 @@ fn count_number_of_characters_in_file(path: &str) -> Result<usize, std::io::Erro
     for line in reader.lines() {
         let line = line?;
         number_of_characters += line.char_indices().count();
-        number_of_characters += 1;
     }
 
     // number of characters will differ from wc command as Rust counts CRLF as LF
+    // TODO: test file for CRLF / LF before reading
     Ok(number_of_characters)
 }
