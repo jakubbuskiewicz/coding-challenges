@@ -1,6 +1,17 @@
+use std::env;
+
+struct Config {
+    option: String,
+    path: String,
+}
+
 fn main() {
-    let option: String = std::env::args().nth(1).expect("no option given");
-    let path: String = std::env::args().nth(2).expect("no path given");
+    let args: Vec<String> = env::args().collect();
+
+    let config: Config = parse_config(&args);
+
+    let option: &String = &config.option;
+    let path: &String = &config.path;
 
     if option == "c" {
         let number_of_bytes: usize =
@@ -83,4 +94,14 @@ fn count_number_of_characters_in_file(path: &str) -> Result<usize, std::io::Erro
     // number of characters will differ from wc command as Rust counts CRLF as LF
     // TODO: test file for CRLF / LF before reading
     Ok(number_of_characters)
+}
+
+fn parse_config(args: &[String]) -> Config {
+    let option: &String = &args[1];
+    let path: &String = &args[2];
+
+    Config {
+        option: option.clone(),
+        path: path.clone(),
+    }
 }
